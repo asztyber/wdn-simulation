@@ -1,10 +1,10 @@
 Comments:
-  - Configuration file for HISTORICAL and EVALUATION DATASET
+  - Simple configuration with one leak
 
 Network:
-  filename: L-TOWN_Real.inp
+  filename: L-TOWN.inp
 
-results_path: Outage//
+results_path: Results
 
 times:
   StartTime: 2019-01-01 00:00
@@ -14,10 +14,7 @@ leakages:
 - # linkID, startTime, endTime, leakDiameter (m), leakType, peakTime
 - p257, 2019-01-02 13:30, 2019-01-02 23:55, 0.011843, incipient, 2019-01-02 18:30
 
-outages:
-- StartTime: 2019-01-02 00:00
-  EndTime: 2019-01-02 23:55
-
+outages: []
 
 pressure_sensors:
 - n1

@@ -1,10 +1,10 @@
 Comments:
-  - Configuration file for HISTORICAL and EVALUATION DATASET
+  - Change of a lower threshold for pump control
 
 Network:
-  filename: L-TOWN.inp
+  filename: L-TOWN_Real.inp
 
-results_path: Results//
+results_path: Pump_control_low
 
 times:
   StartTime: 2019-01-01 00:00
@@ -14,7 +14,10 @@ leakages:
 - # linkID, startTime, endTime, leakDiameter (m), leakType, peakTime
 - p257, 2019-01-02 13:30, 2019-01-02 23:55, 0.011843, incipient, 2019-01-02 18:30
 
-outages: []
+pump_control_low:
+  StartTime: 2019-01-02 00:00
+  EndTime: 2019-01-02 23:55
+  value: 1.5
 
 pressure_sensors:
 - n1

@@ -1,10 +1,10 @@
 Comments:
-  - Configuration file for HISTORICAL and EVALUATION DATASET
+  - Measurement masking
 
 Network:
   filename: L-TOWN_Real.inp
 
-results_path: Pump_curve//
+results_path: Masking
 
 times:
   StartTime: 2019-01-01 00:00
@@ -14,10 +14,17 @@ leakages:
 - # linkID, startTime, endTime, leakDiameter (m), leakType, peakTime
 - p257, 2019-01-02 13:30, 2019-01-02 23:55, 0.011843, incipient, 2019-01-02 18:30
 
-pump_curves:
-- StartTime: 2019-01-02 00:00
+
+pump_control_high:
+  StartTime: 2019-01-02 00:00
   EndTime: 2019-01-02 23:55
-  curve: [[0.0, 70], [0.007607111111111111, 40], [0.013888611111111112, 0.0]]
+  value: 3
+
+
+masking_pressure:
+  - StartTime: 2019-01-02 00:00
+    EndTime: 2019-01-02 23:55
+    node: T1
 
 pressure_sensors:
 - n1

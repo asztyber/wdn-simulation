@@ -1,5 +1,12 @@
 networks/L-TOWN_Real.inp
 measurements_for_masking/
+Masking/
+Outage/
+Pump_control_high/
+Pump_control_low/
+Pump_curve/
+Results/
+self.wn.pickle
 
 
 # Byte-compiled / optimized / DLL files

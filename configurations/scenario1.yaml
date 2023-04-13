@@ -4,7 +4,7 @@ Comments:
 Network:
   filename: L-TOWN_Real.inp
 
-results_path: Scenario1//
+results_path: Scenario1
 
 times:
   StartTime: 2019-01-01 00:00

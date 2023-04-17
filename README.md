@@ -17,7 +17,7 @@ WDN-Simulation provides additional functionality for:
 
   The repository contains nominal network description L-TOWN.inp. To simulate real network you should download L-TOWN_Real.inp from https://zenodo.org/record/4017659
 
-* `measurements_for_masking` - this folder should contain data simulatet without faults to use for masking. It can be downloaded from ...
+* `measurements_for_masking` - this folder should contain data simulatet without faults to use for masking. It can be downloaded from 10.5281/zenodo.7837165
     It is only used for masking measurements, other faults and leakages can be simulated without it.
 
 * `configurations` - scenario configurations in .yaml format

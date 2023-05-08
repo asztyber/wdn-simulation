@@ -257,7 +257,7 @@ class LeakDatasetCreator:
                 writer = pd.ExcelWriter(os.path.join(leakages_folder, f'Leak_{NODEID}.xlsx'), engine='xlsxwriter')
                 df1.to_excel(writer, sheet_name='Info', index=False)
                 df2.to_excel(writer, sheet_name='Demand (m3_h)', index=False)
-                writer.save()
+                writer.close()
 
 
             # Create xlsx file with Measurements
@@ -321,7 +321,7 @@ class LeakDatasetCreator:
             df4.to_excel(writer, sheet_name='Levels (m)', index=False)
 
             # Close the Pandas Excel writer and output the Excel file.
-            writer.save()
+            writer.close()
 
             os.remove('self.wn.pickle')
         else:

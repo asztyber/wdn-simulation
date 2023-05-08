@@ -1,0 +1,4 @@
+pandas==2.0.*
+wntr==1.0.*
+pyyaml==6.0
+xlsxwriter==3.1.0

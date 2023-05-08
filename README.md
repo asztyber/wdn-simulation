@@ -15,7 +15,8 @@ WDN-Simulation provides additional functionality for:
 
 * `networks` - water network structures of L-TOWN in .inp format
 
-  The repository contains nominal network description L-TOWN.inp. To simulate real network you should download L-TOWN_Real.inp from https://zenodo.org/record/4017659
+  The repository contains nominal network description L-TOWN.inp. To simulate real network you should download L-TOWN\_Real.inp from https://zenodo.org/record/4017659
+  and put it in the `networks` directory (e.g. `curl https://zenodo.org/record/4017659/files/L-TOWN_Real.inp?download=1 -o networks/L-TOWN_Real.inp`).
 
 * `measurements_for_masking` - this folder should contain data simulatet without faults to use for masking. It can be downloaded from 10.5281/zenodo.7837165
     It is only used for masking measurements, other faults and leakages can be simulated without it.
@@ -28,4 +29,4 @@ WDN-Simulation provides additional functionality for:
 
 Instructions:
 1) Prepare the desired configuration of a scenario in .yaml format
-2) Run ''' python dataset_generator.py -n configuration_file_name'''
+2) Run `python dataset_generator.py -n configuration_file_name`

@@ -15,16 +15,11 @@ import argparse
 import faults_and_attacks
 
 argParser = argparse.ArgumentParser()
-argParser.add_argument("-n", "--name", help="configuration file name")
+argParser.add_argument("-f", "--file", help="configuration file name", type=argparse.FileType('r'))
 args = argParser.parse_args()
 print("args=%s" % args)
 
-configuration_file_name = args.name
-
-# Read input arguments from yaml file
-
-
-with open(configuration_file_name, 'r') as f:
+with args.file as f:
     configuration = yaml.safe_load(f.read())
     print(configuration)
 

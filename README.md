@@ -25,7 +25,7 @@ pip3 install -r requirements.txt
   The repository contains nominal network description L-TOWN.inp. To simulate real network you should download L-TOWN\_Real.inp from https://zenodo.org/record/4017659
   and put it in the `networks` directory (e.g. `curl https://zenodo.org/record/4017659/files/L-TOWN_Real.inp?download=1 -o networks/L-TOWN_Real.inp`).
 
-* `measurements_for_masking` - this folder should contain data simulatet without faults to use for masking. It can be downloaded from 10.5281/zenodo.7837165
+* `measurements_for_masking` - this folder should contain data simulated without faults to use for masking. It can be downloaded from https://zenodo.org/record/7837165 (all 3 files are required).
     It is only used for masking measurements, other faults and leakages can be simulated without it.
 
 * `configurations` - scenario configurations in .yaml format
@@ -36,12 +36,15 @@ pip3 install -r requirements.txt
 
 Instructions:
 1) Prepare the desired configuration of a scenario in .yaml format
-2) Run `python dataset_generator.py -n configuration_file_name`
+2) Run `python dataset_generator.py -f configuration_file_name`
 
 Sample usage:
 ```
-python dataset_generator.py -n configurations/simple.yaml
+python dataset_generator.py -f configurations/simple.yaml
 
-# Requires `L-TOWN_Real.inp` file
-python dataset_generator.py -n configurations/outage.yaml
+# Requires L-TOWN_Real.inp file
+python dataset_generator.py -f configurations/outage.yaml
+
+# Requires L-TOWN_Real.inp file and measurements_for_masking files
+python dataset_generator.py -f configurations/masking.yaml
 ```

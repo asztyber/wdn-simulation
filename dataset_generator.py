@@ -8,7 +8,6 @@ import numpy as np
 import wntr
 import pickle
 import os
-import sys
 import yaml
 import shutil
 import time
@@ -26,7 +25,7 @@ configuration_file_name = args.name
 # Read input arguments from yaml file
 
 
-with open(os.path.join('configurations', configuration_file_name), 'r') as f:
+with open(configuration_file_name, 'r') as f:
     configuration = yaml.safe_load(f.read())
     print(configuration)
 
@@ -77,8 +76,6 @@ class LeakDatasetCreator:
 
         for name, node in self.wn.junctions():
             node.required_pressure = 25
-            #print(node.nominal_pressure)
-            #print(node.minimum_pressure)
 
         self.inp = os.path.basename(self.wn.name)[0:-4]
 
@@ -104,17 +101,13 @@ class LeakDatasetCreator:
         del file, time_stamp, values
 
     def create_folder(self, _path_):
-
-        try:
-            if os.path.exists(_path_):
-                shutil.rmtree(_path_)
-            os.makedirs(_path_)
-        except Exception as error:
-            pass
+        if os.path.exists(_path_):
+            shutil.rmtree(_path_)
+        os.makedirs(_path_)
 
     def dataset_generator(self):
         # Path of EPANET Input File
-        print(f"Dataset Generator run...")
+        print("Dataset Generator run...")
 
         # Initialize parameters for the leak
         leak_node = {}
@@ -202,7 +195,6 @@ class LeakDatasetCreator:
         # Save/Write input file with new settings
         leakages_folder = os.path.join(results_folder, 'Leakages')
         self.create_folder(leakages_folder)
-        #self.wn.write_inpfile(f'{leakages_folder}\\{self.inp}_with_leaknodes.inp')
 
         # Other faults and attacks
         if pump_control_low:
@@ -210,11 +202,11 @@ class LeakDatasetCreator:
         if pump_control_high:
             faults_and_attacks.change_pump_control_high(pump_control_high, self.wn, self.time_stamp, self.time_step)
         if outages:
-            self.wn.convert_controls_to_rules(priority=3) # avoid flickering controls
+            self.wn.convert_controls_to_rules(priority=3)  # avoid flickering controls
             faults_and_attacks.add_outages(outages, self.wn, self.time_stamp, self.time_step)
         if pump_curves:
             faults_and_attacks.change_pump_curve(pump_curves, self.wn, self.time_stamp, self.time_step)
-        
+
 
         # Save the water network model to a file before using it in a simulation
         with open('self.wn.pickle', 'wb') as f:
@@ -251,7 +243,6 @@ class LeakDatasetCreator:
 
                 total_Leaks = {'Timestamp': self.time_stamp}
                 total_Leaks[NODEID] = leaks
-                #self.create_csv_file(leaks, self.time_stamp, 'Description', f'{leakages_folder}\\Leak_{str(leak_node[leak_i])}_demand.csv')
                 df1 = pd.DataFrame(totals_info)
                 df2 = pd.DataFrame(total_Leaks)
                 writer = pd.ExcelWriter(os.path.join(leakages_folder, f'Leak_{NODEID}.xlsx'), engine='xlsxwriter')
@@ -276,8 +267,8 @@ class LeakDatasetCreator:
                 if node_id in amrs:
                     dem = results.node['demand'][node_id]
                     dem = dem[:len(self.time_stamp)]
-                    dem = [elem * 3600 * 1000 for elem in dem] #CMH / L/s
-                    dem = [round(elem, decimal_size) for elem in dem] #CMH / L/s
+                    dem = [elem * 3600 * 1000 for elem in dem]  # CMH / L/s
+                    dem = [round(elem, decimal_size) for elem in dem]  # CMH / L/s
                     total_demands[node_id] = dem
 
                 if node_id in level_sensors:

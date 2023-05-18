@@ -10,6 +10,13 @@ S. G. Vrachimis, D. G. Eliades, R. Taormina, Z. Kapelan, A. Ostfeld, S. Liu, M. 
 WDN-Simulation provides additional functionality for:
 * simulating pump faults and outages
 * simulating cyber-attacks (pump control change and signal masking)
+
+## Installation
+
+```
+pip3 install -r requirements.txt
+```
+
  
 ## Assets
 
@@ -30,3 +37,11 @@ WDN-Simulation provides additional functionality for:
 Instructions:
 1) Prepare the desired configuration of a scenario in .yaml format
 2) Run `python dataset_generator.py -n configuration_file_name`
+
+Sample usage:
+```
+python dataset_generator.py -n configurations/simple.yaml
+
+# Requires `L-TOWN_Real.inp` file
+python dataset_generator.py -n configurations/outage.yaml
+```

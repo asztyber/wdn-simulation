@@ -6,7 +6,6 @@ Copyright: (C) 2019, KIOS Research Center of Excellence
 import pandas as pd
 import numpy as np
 import wntr
-import pickle
 import os
 import yaml
 import shutil
@@ -207,11 +206,6 @@ class LeakDatasetCreator:
         if pump_curves:
             faults_and_attacks.change_pump_curve(pump_curves, self.wn, self.time_stamp, self.time_step)
 
-
-        # Save the water network model to a file before using it in a simulation
-        with open('self.wn.pickle', 'wb') as f:
-            pickle.dump(self.wn, f)
-
         # Run wntr simulator
         sim = wntr.sim.WNTRSimulator(self.wn)
         self.wn.options.hydraulic.demand_model = Mode_Simulation
@@ -313,8 +307,6 @@ class LeakDatasetCreator:
 
             # Close the Pandas Excel writer and output the Excel file.
             writer.close()
-
-            os.remove('self.wn.pickle')
         else:
             print('Results empty.')
             return -1

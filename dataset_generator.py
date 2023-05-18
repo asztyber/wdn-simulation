@@ -36,7 +36,6 @@ leakages = leakages[1:]
 number_of_leaks = len(leakages)
 inp_file = configuration['Network']['filename']
 print(f'Run input file: "{inp_file}"')
-pressure_sensors = configuration['pressure_sensors']
 outages = configuration.get('outages')
 pump_curves = configuration.get('pump_curves')
 pump_control_low = configuration.get('pump_control_low')
@@ -51,14 +50,13 @@ def get_sensors(leak_pipes, field):
     [sensors.append(str(sens)) for sens in leak_pipes[field]]
     return sensors
 
-flow_sensors = get_sensors(configuration, 'flow_sensors')
 pressure_sensors = get_sensors(configuration, 'pressure_sensors')
 amrs = get_sensors(configuration, 'amrs')
 flow_sensors = get_sensors(configuration, 'flow_sensors')
 level_sensors = get_sensors(configuration, 'level_sensors')
 
 # demand-driven (DD) or pressure dependent demand (PDD)
-Mode_Simulation = 'PDD'  # 'PDD'#'PDD'
+Mode_Simulation = 'PDD'
 
 
 class LeakDatasetCreator:
@@ -77,9 +75,6 @@ class LeakDatasetCreator:
             node.required_pressure = 25
 
         self.inp = os.path.basename(self.wn.name)[0:-4]
-
-        # Get the name of input file
-        self.net_name = f'{results_folder}{self.inp}'
 
         # Get time step
         self.time_step = round(self.wn.options.time.hydraulic_timestep)
@@ -313,13 +308,8 @@ class LeakDatasetCreator:
 
 
 if __name__ == '__main__':
-
-    # Create tic / toc
     t = time.time()
-
-    # Call leak dataset creator
     L = LeakDatasetCreator()
-    # Create scenario one-by-one
     L.dataset_generator()
 
     print(f'Total Elapsed time is {str(time.time() - t)} seconds.')

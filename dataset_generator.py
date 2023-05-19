@@ -2,6 +2,8 @@
 """
 Dataset Generator
 Copyright: (C) 2019, KIOS Research Center of Excellence
+
+Extentions and modifications, 2023 Anna Sztyber-Betley, Warsaw University of Technology
 """
 import pandas as pd
 import numpy as np

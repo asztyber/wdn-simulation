@@ -87,7 +87,7 @@ def change_pump_control_high(pump_control_high, wn, time_stamp, time_step):
 
 def masking(masking, dfs, filename):
     masking_data = pd.read_csv(os.path.join('measurements_for_masking', filename), sep=';', index_col=0)
-    masking_data['Timestamp'] = masking_data['Timestamp'].astype('datetime64')
+    masking_data['Timestamp'] = masking_data['Timestamp'].astype('datetime64[ns]')
     for m in masking:
         start_time, end_time = m['StartTime'], m['EndTime']
         node = m['node']

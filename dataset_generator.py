@@ -209,7 +209,7 @@ class LeakDatasetCreator:
             for leak_i in range(0, number_of_leaks):
                 if 'leaknode' in str(leak_node[leak_i]):
                     NODEID = str(leak_node[leak_i]).split('_')[0]
-                totals_info = {'Description': ['Leak Pipe', 'Leak Area', 'Leak Diameter', 'Leak Type', 'Leak Start',
+                totals_info = {'Description': ['Leak Pipe', 'Leak Area [m^2]', 'Leak Diameter [m]', 'Leak Type', 'Leak Start',
                                                'Leak End', 'Peak Time'],
                                'Value': [NODEID, str(leak_area[leak_i]), str(leak_diameter[leak_i]),
                                          leak_type[leak_i],

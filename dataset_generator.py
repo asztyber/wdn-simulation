@@ -6,9 +6,7 @@ Copyright: (C) 2019, KIOS Research Center of Excellence
 import pandas as pd
 import numpy as np
 import wntr
-import pickle
 import os
-import sys
 import yaml
 import shutil
 import time
@@ -17,16 +15,11 @@ import argparse
 import faults_and_attacks
 
 argParser = argparse.ArgumentParser()
-argParser.add_argument("-n", "--name", help="configuration file name")
+argParser.add_argument("-f", "--file", help="configuration file name", type=argparse.FileType('r'))
 args = argParser.parse_args()
 print("args=%s" % args)
 
-configuration_file_name = args.name
-
-# Read input arguments from yaml file
-
-
-with open(os.path.join('configurations', configuration_file_name), 'r') as f:
+with args.file as f:
     configuration = yaml.safe_load(f.read())
     print(configuration)
 
@@ -38,7 +31,6 @@ leakages = leakages[1:]
 number_of_leaks = len(leakages)
 inp_file = configuration['Network']['filename']
 print(f'Run input file: "{inp_file}"')
-pressure_sensors = configuration['pressure_sensors']
 outages = configuration.get('outages')
 pump_curves = configuration.get('pump_curves')
 pump_control_low = configuration.get('pump_control_low')
@@ -53,14 +45,13 @@ def get_sensors(leak_pipes, field):
     [sensors.append(str(sens)) for sens in leak_pipes[field]]
     return sensors
 
-flow_sensors = get_sensors(configuration, 'flow_sensors')
 pressure_sensors = get_sensors(configuration, 'pressure_sensors')
 amrs = get_sensors(configuration, 'amrs')
 flow_sensors = get_sensors(configuration, 'flow_sensors')
 level_sensors = get_sensors(configuration, 'level_sensors')
 
 # demand-driven (DD) or pressure dependent demand (PDD)
-Mode_Simulation = 'PDD'  # 'PDD'#'PDD'
+Mode_Simulation = 'PDD'
 
 
 class LeakDatasetCreator:
@@ -77,13 +68,8 @@ class LeakDatasetCreator:
 
         for name, node in self.wn.junctions():
             node.required_pressure = 25
-            #print(node.nominal_pressure)
-            #print(node.minimum_pressure)
 
         self.inp = os.path.basename(self.wn.name)[0:-4]
-
-        # Get the name of input file
-        self.net_name = f'{results_folder}{self.inp}'
 
         # Get time step
         self.time_step = round(self.wn.options.time.hydraulic_timestep)
@@ -104,17 +90,13 @@ class LeakDatasetCreator:
         del file, time_stamp, values
 
     def create_folder(self, _path_):
-
-        try:
-            if os.path.exists(_path_):
-                shutil.rmtree(_path_)
-            os.makedirs(_path_)
-        except Exception as error:
-            pass
+        if os.path.exists(_path_):
+            shutil.rmtree(_path_)
+        os.makedirs(_path_)
 
     def dataset_generator(self):
         # Path of EPANET Input File
-        print(f"Dataset Generator run...")
+        print("Dataset Generator run...")
 
         # Initialize parameters for the leak
         leak_node = {}
@@ -202,7 +184,6 @@ class LeakDatasetCreator:
         # Save/Write input file with new settings
         leakages_folder = os.path.join(results_folder, 'Leakages')
         self.create_folder(leakages_folder)
-        #self.wn.write_inpfile(f'{leakages_folder}\\{self.inp}_with_leaknodes.inp')
 
         # Other faults and attacks
         if pump_control_low:
@@ -210,15 +191,10 @@ class LeakDatasetCreator:
         if pump_control_high:
             faults_and_attacks.change_pump_control_high(pump_control_high, self.wn, self.time_stamp, self.time_step)
         if outages:
-            self.wn.convert_controls_to_rules(priority=3) # avoid flickering controls
+            self.wn.convert_controls_to_rules(priority=3)  # avoid flickering controls
             faults_and_attacks.add_outages(outages, self.wn, self.time_stamp, self.time_step)
         if pump_curves:
             faults_and_attacks.change_pump_curve(pump_curves, self.wn, self.time_stamp, self.time_step)
-        
-
-        # Save the water network model to a file before using it in a simulation
-        with open('self.wn.pickle', 'wb') as f:
-            pickle.dump(self.wn, f)
 
         # Run wntr simulator
         sim = wntr.sim.WNTRSimulator(self.wn)
@@ -251,13 +227,12 @@ class LeakDatasetCreator:
 
                 total_Leaks = {'Timestamp': self.time_stamp}
                 total_Leaks[NODEID] = leaks
-                #self.create_csv_file(leaks, self.time_stamp, 'Description', f'{leakages_folder}\\Leak_{str(leak_node[leak_i])}_demand.csv')
                 df1 = pd.DataFrame(totals_info)
                 df2 = pd.DataFrame(total_Leaks)
                 writer = pd.ExcelWriter(os.path.join(leakages_folder, f'Leak_{NODEID}.xlsx'), engine='xlsxwriter')
                 df1.to_excel(writer, sheet_name='Info', index=False)
                 df2.to_excel(writer, sheet_name='Demand (m3_h)', index=False)
-                writer.save()
+                writer.close()
 
 
             # Create xlsx file with Measurements
@@ -276,8 +251,8 @@ class LeakDatasetCreator:
                 if node_id in amrs:
                     dem = results.node['demand'][node_id]
                     dem = dem[:len(self.time_stamp)]
-                    dem = [elem * 3600 * 1000 for elem in dem] #CMH / L/s
-                    dem = [round(elem, decimal_size) for elem in dem] #CMH / L/s
+                    dem = [elem * 3600 * 1000 for elem in dem]  # CMH / L/s
+                    dem = [round(elem, decimal_size) for elem in dem]  # CMH / L/s
                     total_demands[node_id] = dem
 
                 if node_id in level_sensors:
@@ -321,22 +296,15 @@ class LeakDatasetCreator:
             df4.to_excel(writer, sheet_name='Levels (m)', index=False)
 
             # Close the Pandas Excel writer and output the Excel file.
-            writer.save()
-
-            os.remove('self.wn.pickle')
+            writer.close()
         else:
             print('Results empty.')
             return -1
 
 
 if __name__ == '__main__':
-
-    # Create tic / toc
     t = time.time()
-
-    # Call leak dataset creator
     L = LeakDatasetCreator()
-    # Create scenario one-by-one
     L.dataset_generator()
 
     print(f'Total Elapsed time is {str(time.time() - t)} seconds.')
